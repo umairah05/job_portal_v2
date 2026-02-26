@@ -103,7 +103,7 @@ export default function UpdateProfileInformation({
                         leaveTo="opacity-0"
                     >
                         <p className="text-sm text-gray-600">
-                            Saved.
+                            Simpan.
                         </p>
                     </Transition>
                 </div>

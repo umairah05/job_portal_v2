@@ -27,7 +27,7 @@ export default function Register() {
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Nama" />
 
                     <TextInput
                         id="name"
@@ -61,7 +61,24 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="designation" value="Jawatan" />
+
+                    <TextInput
+                        id="designation"
+                        name="designation"
+                        value={data.designation}
+                        className="mt-1 block w-full"
+                        autoComplete="name"
+                        isFocused={true}
+                        onChange={(e) => setData('designation', e.target.value)}
+                        required
+                    />
+
+                    <InputError message={errors.designation} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="password" value="Kata Laluan" />
 
                     <TextInput
                         id="password"
@@ -80,7 +97,7 @@ export default function Register() {
                 <div className="mt-4">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value="Sahkan Kata Laluan"
                     />
 
                     <TextInput
@@ -107,11 +124,11 @@ export default function Register() {
                         href={route('login')}
                         className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        Already registered?
+                        Sudah mendaftar?
                     </Link>
 
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
+                        Daftar
                     </PrimaryButton>
                 </div>
             </form>

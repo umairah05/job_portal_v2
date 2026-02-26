@@ -28,7 +28,20 @@ export default function AuthenticatedLayout({ header, children }) {
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
                                 >
-                                    Dashboard
+                                    Utama
+                                </NavLink>
+                                <NavLink
+                                    href={route('user')}
+                                    active={route().current('user')}
+                                >
+                                    Pengguna
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('vacancy')}
+                                    active={route().current('vacancy')}
+                                >
+                                    Kerja Kosong
                                 </NavLink>
                             </div>
                         </div>
@@ -64,14 +77,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <Dropdown.Link
                                             href={route('profile.edit')}
                                         >
-                                            Profile
+                                            Profil
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('logout')}
                                             method="post"
                                             as="button"
                                         >
-                                            Log Out
+                                            Log Keluar
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -132,7 +145,21 @@ export default function AuthenticatedLayout({ header, children }) {
                             href={route('dashboard')}
                             active={route().current('dashboard')}
                         >
-                            Dashboard
+                            Utama
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            href={route('user')}
+                            active={route().current('user')}
+                        >
+                            Pengguna
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            href={route('vacancy')}
+                            active={route().current('vacancy')}
+                        >
+                            Kerja kosong
                         </ResponsiveNavLink>
                     </div>
 
@@ -148,14 +175,14 @@ export default function AuthenticatedLayout({ header, children }) {
 
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
+                                Profil
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
                                 href={route('logout')}
                                 as="button"
                             >
-                                Log Out
+                                Log Keluar
                             </ResponsiveNavLink>
                         </div>
                     </div>

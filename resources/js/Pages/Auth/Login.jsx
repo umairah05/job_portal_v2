@@ -3,7 +3,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
+import LoginLayout from '@/Layouts/LoginLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Login({ status, canResetPassword }) {
@@ -22,7 +22,7 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout>
+        <LoginLayout>
             <Head title="Log in" />
 
             {status && (
@@ -30,7 +30,7 @@ export default function Login({ status, canResetPassword }) {
                     {status}
                 </div>
             )}
-
+<div className=''>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
@@ -94,7 +94,9 @@ export default function Login({ status, canResetPassword }) {
                         Log Masuk
                     </PrimaryButton>
                 </div>
-            </form>
-        </GuestLayout>
+            </form>    
+</div>
+
+        </LoginLayout>
     );
 }

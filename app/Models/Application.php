@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
-class Vacancy extends Model
+
+class Application extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -30,26 +31,15 @@ class Vacancy extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'vacancies_title',
-        'vacancies_location',
-        'vacancies_description',
-        'start_date',
-        'end_date',
-        'ads_link',
+        'vacancy_uuid',
+        'application_snapshot',
+        'candidate_nric',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];    
-
-    // public function roles(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Role::class);
-    // }
+      protected function casts(): array
+    {
+        return [
+            'application_snapshot' => 'array',
+        ];
+    }
 }

@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
+import RadioGroup from '@/Components/RadioGroup';
 import {
     Dialog,
     DialogContent,
@@ -24,42 +25,48 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
 
-export default function VacancyAddVacancy({}) {
+export default function ApplicationEducation({onAddEducation}) {
 
     const { data, setData, post, processing, errors, reset } = useForm({
-        vacancies_title: '',
-        vacancies_location: '',
-        vacancies_description: '',
-        start_date: '',
-        end_date: '',
-        ads_link: '',
+        school_name: '',
+        start_school: '',
+        end_school: '',
+        education_level: '',
+        education_field: '',
     });
 
-    const [openStartDate, setOpenStartDate] = useState(false);
-    const [openEndDate, setOpenEndDate] = useState(false);
+    const [startSchool, setStartSchool] = useState(false);
+    const [endSchool, setEndSchool] = useState(false);
 
     const [dropdown, setDropdown] = useState("dropdown");
+
+    const handleEducationChange = (educationLevel) => {
+        setData('education_level', educationLevel);
+    }
     
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const submit = (e) => {
         e.preventDefault();
-        // console.log('onSuccess', data);
+        console.log('onSuccess', data);
 
-        post(route('vacancy.save'), {
-            onSuccess: () => {
-                reset(
-                    'vacancies_title',
-                    'vacancies_location',
-                    'vacancies_description',
-                    'start_date',
-                    'end_date',
-                    'ads_link',
-                );
-                // Close the dialog
-                // console.log('onSuccess', data);
-                setIsDialogOpen(false);
-            },
-        });
+        // Call the parent callback to add the board member
+        if (onAddEducation) {
+            onAddEducation({
+                id: Date.now(), // Generate unique ID
+                ...data
+            });
+        }
+
+
+        // Reset form and close dialog
+        reset(
+            'school_name',
+            'start_school',
+            'end_school',
+            'education_level',
+            'education_field',
+        );
+        setIsDialogOpen(false);
     };
 
     // console.log('vendor_application_id', vendor_application_id);
@@ -69,7 +76,11 @@ export default function VacancyAddVacancy({}) {
 
         if (!isOpen) {
             reset(
-              'vendor_id',
+            'school_name',
+            'start_school',
+            'end_school',
+            'education_level',
+            'education_field',
             );
         }
     };
@@ -77,12 +88,12 @@ export default function VacancyAddVacancy({}) {
         <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
                 <PrimaryButton variant="outline">
-                    + Tambah Kerja 
+                    + Tambah Maklumat Pendidikan
                 </PrimaryButton>
             </DialogTrigger>
             <DialogContent className="max-w-xl">
                 <DialogHeader>
-                    <DialogTitle>Tambah Kerja Kosong</DialogTitle>
+                    <DialogTitle>Tambah Maklumat Pendidikan</DialogTitle>
                 </DialogHeader>
                 <div className="mt-4">
 
@@ -91,113 +102,60 @@ export default function VacancyAddVacancy({}) {
                        < div className="grid flex-1 gap-2">
                             <div>
                                 <InputLabel
-                                    htmlFor="vacancies_title"
+                                    // htmlFor="vacancies_title"
                                     value={
                                         <>
-                                            Nama Kerja Kosong<span className="text-red-500">*</span>
+                                            Nama Sekolah/IPT<span className="text-red-500">*</span>
                                         </>
                                     }
                                 />
                                 <TextInput
-                                    id="vacancies_title"
-                                    name="vacancies_title"
-                                    value={data.vacancies_title}
+                                    id="school_name"
+                                    name="school_name"
+                                    value={data.school_name}
                                     className="mt-1 block w-full"
                                     isFocused={true}
                                     onChange={(e) =>
-                                        setData('vacancies_title', e.target.value)
+                                        setData('school_name', e.target.value)
                                     }
                                     required
                                 />
                                 <InputError
-                                    message={errors.vacancies_title}
+                                    message={errors.school_name}
                                     className="mt-2"
                                 />
                             </div>
                         </div>
+
                         < div className="grid flex-1 gap-2">
                             <div>
                                 <InputLabel
-                                    htmlFor="vacancies_location"
-                                    value={
-                                        <>
-                                            Lokasi Kerja Kosong<span className="text-red-500">*</span>
-                                        </>
-                                    }
-                                />
-                                <TextInput
-                                    id="vacancies_location"
-                                    name="vacancies_location"
-                                    value={data.vacancies_location}
-                                    className="mt-1 block w-full"
-                                    isFocused={true}
-                                    onChange={(e) =>
-                                        setData('vacancies_location', e.target.value)
-                                    }
-                                    required
-                                />
-                                <InputError
-                                    message={errors.vacancies_location}
-                                    className="mt-2"
-                                />
-                            </div>
-                        </div>< div className="grid flex-1 gap-2">
-                            <div>
-                                <InputLabel
-                                    htmlFor="vacancies_description"
-                                    value={
-                                        <>
-                                            Keterangan Kerja Kosong
-                                        </>
-                                    }
-                                />
-                                <TextInput
-                                    id="vacancies_description"
-                                    name="vacancies_description"
-                                    value={data.vacancies_description}
-                                    className="mt-1 block w-full"
-                                    isFocused={true}
-                                    onChange={(e) =>
-                                        setData('vacancies_description', e.target.value)
-                                    }
-                                    
-                                
-                                />
-                                <InputError
-                                    message={errors.vacancies_description}
-                                    className="mt-2"
-                                />
-                            </div>
-                        </div>
-                        < div className="grid flex-1 gap-2">
-                            <div>
-                                <InputLabel
-                                    htmlFor="start_date"
+                                    // htmlFor="vacancies_location"
                                     value={
                                         <>
                                             Tarikh Mula<span className="text-red-500">*</span>
                                         </>
                                     }
                                 />
-                                <Popover open={openStartDate} onOpenChange={setOpenStartDate} modal={false}>
+                                <Popover open={startSchool} onOpenChange={setStartSchool} modal={false}>
                                         <PopoverTrigger asChild>
                                                     <button
                                                         type="button"
                                                         className={cn(
                                                             "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
-                                                            !data.start_date && "text-muted-foreground"
+                                                            !data.start_school && "text-muted-foreground"
                                                         )}
                                                     >
-                                                        { data.start_date ? format(data.start_date, "dd/MM/yyyy") : "Pilih Tarikh"}
+                                                        { data.start_school ? format(data.start_school, "dd/MM/yyyy") : "Pilih Tarikh"}
                                                     </button>
                                                 </PopoverTrigger>
                                                 <PopoverContent className="w-auto p-0" trapFocus={false}>
                                                     <Calendar
                                                     mode="single"
-                                                    selected={data.start_date ? new Date(data.start_date) : undefined}
+                                                    selected={data.start_school ? new Date(data.start_school) : undefined}
                                                     onSelect={selectedDate => {
-                                                            setData('start_date', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
-                                                            setOpenStartDate(false);
+                                                            setData('start_school', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
+                                                            setStartSchool(false);
                                                         }}
                                                     captionLayout={dropdown}
                                                     fromYear={1900}
@@ -206,41 +164,42 @@ export default function VacancyAddVacancy({}) {
                                                 />
                                                 </PopoverContent>
                                         </Popover>
-                                    <InputError
-                                    message={errors.start_date}
+                                <InputError
+                                    message={errors.start_school}
                                     className="mt-2"
                                 />
                             </div>
                         </div>
+                        
                         < div className="grid flex-1 gap-2">
                             <div>
                                 <InputLabel
-                                    htmlFor="end_date"
+                                    // htmlFor="vacancies_location"
                                     value={
                                         <>
                                             Tarikh Akhir<span className="text-red-500">*</span>
                                         </>
                                     }
                                 />
-                                <Popover open={openEndDate} onOpenChange={setOpenEndDate} modal={false}>
-                                                <PopoverTrigger asChild>
+                                <Popover open={endSchool} onOpenChange={setEndSchool} modal={false}>
+                                        <PopoverTrigger asChild>
                                                     <button
                                                         type="button"
                                                         className={cn(
                                                             "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
-                                                            !data.end_date && "text-muted-foreground"
+                                                            !data.end_school && "text-muted-foreground"
                                                         )}
                                                     >
-                                                        { data.end_date ? format(data.end_date, "dd/MM/yyyy") : "Pilih Tarikh"}
+                                                        { data.end_school ? format(data.end_school, "dd/MM/yyyy") : "Pilih Tarikh"}
                                                     </button>
                                                 </PopoverTrigger>
                                                 <PopoverContent className="w-auto p-0" trapFocus={false}>
                                                     <Calendar
                                                     mode="single"
-                                                    selected={data.end_date ? new Date(data.end_date) : undefined}
+                                                    selected={data.end_school ? new Date(data.end_school) : undefined}
                                                     onSelect={selectedDate => {
-                                                            setData('end_date', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
-                                                            setOpenEndDate(false);
+                                                            setData('end_school', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
+                                                            setEndSchool(false);
                                                         }}
                                                     captionLayout={dropdown}
                                                     fromYear={1900}
@@ -248,36 +207,68 @@ export default function VacancyAddVacancy({}) {
                                                     className="rounded-lg border shadow-sm"
                                                 />
                                                 </PopoverContent>
-                                            </Popover>
+                                        </Popover>
                                 <InputError
-                                    message={errors.end_date}
+                                    message={errors.end_school}
                                     className="mt-2"
                                 />
                             </div>
                         </div>
+
+                        <div className="grid flex-1 gap-2 md:grid-cols-1">
+                            <InputLabel
+                                 //  htmlFor="vacancies_title"
+                                value={
+                             <>
+                                Tahap Pendidikan<span className="text-red-500">*</span>
+                             </>
+                            }
+                             />
+                            <RadioGroup
+                                name="education_level"
+                                value={data.education_level}
+                                 onChange={handleEducationChange}
+                                options={[
+                                { value: 'spm', label: 'SPM' },
+                                { value: 'stpm', label: 'STPM' },
+                                { value: 'asasi', label: 'Asasi'},
+                                { value: 'matrik', label: 'Matrikulasi' },
+                                { value: 'diploma', label: 'Diploma' },
+                                { value: 'degree', label: 'Ijazah Sarjana Muda' },
+                                { value: 'master', label: 'Ijazah Sarjana' },
+                                { value: 'phd', label: 'Doktor Falsafah' },
+                            ]}
+                            columns={8}
+                            />
+                            <InputError
+                                message={errors.education_level}
+                                className='mt-2'
+                             />
+                        </div>
+
                         < div className="grid flex-1 gap-2">
                             <div>
                                 <InputLabel
-                                    htmlFor="ads_link"
+                                    // htmlFor="end_date"
                                     value={
                                         <>
-                                            Pautan ke Iklan Jawatan<span className="text-red-500">*</span>
+                                            Nama Program/ Kursus/ Bidang
                                         </>
                                     }
                                 />
-                                <TextInput
-                                    id="ads_link"
-                                    name="ads_link"
-                                        value={data.ads_link}
-                                        className="mt-1 block w-full"
+                               <TextInput
+                                    id="education_field"
+                                    name="education_field"
+                                    value={data.education_field}
+                                    className="mt-1 block w-full"
                                     isFocused={true}
                                     onChange={(e) =>
-                                        setData('ads_link', e.target.value)
+                                        setData('education_field', e.target.value)
                                     }
-                                    required
+                                
                                 />
                                 <InputError
-                                    message={errors.ads_link}
+                                    message={errors.education_field}
                                     className="mt-2"
                                 />
                             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function DataTable({ columns, data, className = "", showSearch = true }) {
+export default function DataTablePrintView({ columns, data, className = "", showSearch = true }) {
     const [search, setSearch] = useState('');
 
     // Filter data based on search input
@@ -23,24 +23,7 @@ export default function DataTable({ columns, data, className = "", showSearch = 
 
     return (
         <div className={className}>
-            {/* Search Input */}
-            {showSearch && (
-                <div className="mb-4">
-                    <input
-                        type="text"
-                        placeholder="Cari..."
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
-            )}
-
             {/* Table */}
-            <div className="mt-4 text-sm text-gray-600">
-                Menunjukkan {filteredData.length} daripada {data.length} baris.
-            </div>
-            
             <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse border border-gray-200 bg-white">
                     <thead>
@@ -48,7 +31,7 @@ export default function DataTable({ columns, data, className = "", showSearch = 
                             {columns.map((column) => (
                                 <th
                                     key={column.accessor || column.Header}
-                                    className="px-4 py-2 text-left  border-gray-200 bg-gray-800 text-white"
+                                    className="px-4 py-2 text-left  border-gray-200 bg-gray-100 text-black"
                                 >
                                     {column.Header}
                                 </th>

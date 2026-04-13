@@ -42,7 +42,7 @@ import {
 // } from "@/Components/ui/select"
 
 export default function ApplicationIndex({vacancies}) {
-console.log(vacancies);
+// console.log(vacancies);
 
     const { application } = usePage().props.auth;
     const applicationIndex = usePage().props.auth.applicationIndex || [];
@@ -90,12 +90,67 @@ console.log(vacancies);
             name: '',
             ic_number: '',
             age: '',
+            dateOfBirth: '',
+            gender: '',
+            ethnicity: '',
+            marital_status: '',
+            children_num: '',
+            address: '',
+            address_postal: '',
+            no_phone: '',
+            phone_home: '',
+            email: '',
+            expected_salary: '',
+            start_date: '',
+
+            
             educationData: [],
+
+            salary: '',
+            allowance: '',
+            report_to: '',
+            report_count: '',
+            notice_period: '',
+
+            language_malay: '',
+            language_english: '',
+            other_language: '',
+            language: '',
+
+            crime_charge: '',
+            crime_charge_details: '',
+            bankruptcy: '',
+            business_involvement: '',
+            business_involvement_details: '',
+            license: '',
+            license_details: '',
+            smoker: '',
+            drinker: '',
+
+            medical_condition: '',
+            medical_condition_details: '',
+            physical_disability: '',
+            physical_disability_details: '',
+            pregnancy_status: '',
+            pregnancy_status_details: '',
+
+            achievement: '',
+
+            reference_name_1: '',
+            reference_relationship_1: '',
+            reference_phone_1: '',
+
+            reference_name_2: '',
+            reference_phone_2: '',
+            reference_company_2: '',
+            reference_position_2: '',
+
+            resume: '',
     });
 
     const submit = (e) => {
         e.preventDefault();
-        // console.log('onSuccess', data);
+        console.log('onSuccess', data);
         if(currentPart !== totalParts){
             return;
         }
@@ -113,7 +168,7 @@ console.log(vacancies);
     useEffect(() => {
         if (shouldSubmit) {
             setShouldSubmit(false);
-            
+            console.log('Submitting data:', data);
             post(route('application.save'), {
                 ...data
             },
@@ -145,17 +200,27 @@ console.log(vacancies);
         }
     };
 
-    // const handleVendorTypeChange = (type) => {
-    //     setVendorType(type);
-    //     setData('vendor_type', type);
-    //     setData('vendor_company_type', '');
-    //     // setData('')
-    // };
+    const allAnswered = (currentPart) => {
+        console.log(data.language_malay);
+        if (currentPart === 1 && data.name !== '' && data.ic_number  !== '' && data.age !== '' && data.dateOfBirth !== '' 
+            && data.gender !== '' && data.ethnicity !== '' && data.marital_status !== '' && data.address !== '' 
+            && data.no_phone !== '' && data.email !== '' && data.expected_salary !== '' && data.start_date !== '') {
+            return true;
+        }
+        else if (currentPart === 2 || currentPart === 3 || currentPart === 4 || currentPart === 5) {
+            return true;
+        }
+        else if (currentPart === 6 && data.language_malay !== '' && data.language_english !== '' && data.crime_charge !== '' 
+            && data.bankruptcy !== '' && data.business_involvement !== '' && data.license !== '' && data.smoker !== '' 
+            && data.drinker !== '' && data.medical_condition !== '' && data.physical_disability !== '') {
+            return true;
+        }
+        else if (currentPart === 7 && data.achievement !== '' && data.reference_name_1 !== '' && data.reference_relationship_1 !== '' 
+            && data.reference_phone_1 !== '' && data.resume !== ''){
+            return true;
+        }
+    }
 
-    // const handleCompanyTypeChange = (companyType) => {
-    //     setCompanyType(companyType);
-    //     setData('vendor_company_type', companyType);
-    // };
     const handleGenderChange = (gender) => {
         setData('gender', gender);
     };
@@ -163,10 +228,6 @@ console.log(vacancies);
     const handleMaritalStatusChange = (maritalStatus) => {
         setData('marital_status', maritalStatus);
     };
-
-    // const handleEducationChange = (educationLevel) => {
-    //     setData('education_level', educationLevel);
-    // }
 
     const handleMalayChange = (language_malay) => {
         setData('language_malay', language_malay);
@@ -219,24 +280,31 @@ console.log(vacancies);
         setData('vacancy_uuid', vacancy_uuid);
         console.log(data.vacancy_uuid)
     };
- 
+
+    const [ageAlert, setAgeAlert] = useState(false);
+
+    const setAge = (age) => {
+        age = parseInt(age); 
+        setData('age', age);
+        setAgeAlert(true);
+        if (age >= 18 && age < 70){
+            setAgeAlert(false);            
+        }
+    }
+
     const vacancy = vacancies.map(value=>({value:value.id, label:value.vacancies_title}));
     
-
-
     const formatDateTime = (dateTimeString) => {
         if (!dateTimeString) return '-';
         const date = new Date(dateTimeString);
-        
-        // Convert to UTC+8
-        
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
         
         return `${day}/${month}/${year}`;
-    }    
-     const familycolumns = [
+    } 
+
+    const familycolumns = [
         {Header: 'Nama', accessor: ['family_name'],
             Cell: ({ row }) => (
                 <div className="flex flex-col">
@@ -268,7 +336,7 @@ console.log(vacancies);
         },
     ]
 
-     const educationcolumns = [
+    const educationcolumns = [
         {Header: 'Nama Sekolah/IPT', accessor: ['school_name'],
             Cell: ({ row }) => (
                 <div className="flex flex-col">
@@ -276,12 +344,12 @@ console.log(vacancies);
                 </div>
             ),
         },
-        {Header: 'Tarikh Mula & Tamat', accessor: ['start_school'],
+        {Header: 'Tahun Mula & Tamat', accessor: ['start_school'],
             Cell: ({ row }) => (
                 <div className="flex items-center space-x-2">
-                    <div className='font-normal text-sm'>{formatDateTime(row.start_school)}</div> 
+                    <div className='font-normal text-sm'>{row.start_school}</div> 
                     <span className="text-gray-950">-</span>
-                    <div className='font-normal text-sm'>{formatDateTime(row.end_school)}</div>
+                    <div className='font-normal text-sm'>{row.end_school}</div>
                 </div>
             ),
         },
@@ -301,7 +369,7 @@ console.log(vacancies);
         },
     ]
 
-     const employercolumns = [
+    const employercolumns = [
         {Header: 'Nama Majikan', accessor: ['employer_name'],
             Cell: ({ row }) => (
                 <div className="flex flex-col">
@@ -319,9 +387,9 @@ console.log(vacancies);
         {Header: 'Tahun Mula & Tamat Bekerja', accessor: ['start_year'],
             Cell: ({ row }) => (
                 <div className="flex items-center space-x-2">
-                    <div className='font-normal text-sm'>{formatDateTime(row.start_year)}</div> 
+                    <div className='font-normal text-sm'>{row.start_year}</div> 
                     <span className="text-gray-950">-</span>
-                    <div className='font-normal text-sm'>{formatDateTime(row.end_year)}</div>
+                    <div className='font-normal text-sm'>{row.end_year}</div>
                 </div>
             ),
         },
@@ -341,8 +409,6 @@ console.log(vacancies);
         },
     ]
 
-
-
     return (
         <GuestLayout
             header={
@@ -353,16 +419,6 @@ console.log(vacancies);
         >
             <Head title="Dashboard" />
 
-            {/* <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                           
-                        </div>
-                    </div>
-                </div>
-            </div> */}
-
             {/* <Head title="Complete Registration" /> */}
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -371,15 +427,6 @@ console.log(vacancies);
                         <div className="overflow-hidden bg-white shadow-lg sm:rounded-2xl p-4">
                             {currentPart === 1 && (
                                 <div>
-                                    {/* {vacancies.length > 0 && (
-                                        <div className="mt-6">
-                                            <div className="grid grid-cols-2 gap-2">
-                                                {vacancies.map((vacancy) => (
-
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )} */}
                                     <p className='text-sm font-bold underline'>Permohonan Bagi Jawatan (Sila Pilih)
                                         <span className="text-red-500">*</span></p>
                                     <RadioGroup
@@ -392,428 +439,447 @@ console.log(vacancies);
                                     <InputError
                                             message={errors.vacancy_uuid}
                                             className="mt-2"
-                                        />
+                                    />
+
                                     <p className='font-bold'>Bahagian 1 : Maklumat Peribadi</p>
-                                    <div className='mt-4'>
+                                    <div className='mt-4 space-y-4'>
                                         <p className='text-sm font-bold underline'>Maklumat Peribadi</p>
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Nama<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="name "
-                                            name="name"
-                                            value={data.name}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('name', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.name}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-3">
                                         <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Nombor Kad Pengenalan<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="ic_number"
-                                            name="ic_number"
-                                            value={data.ic_number}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('ic_number', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.ic_number}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Umur(Tahun)<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="age"
-                                            name="age"
-                                            value={data.age}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('age', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.age}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Tarikh Lahir<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <Popover open={dateOfBirth} onOpenChange={setDateOfBirth} modal={false}>
-                                        <PopoverTrigger asChild>
-                                                    <button
-                                                        type="button"
-                                                        className={cn(
-                                                            "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
-                                                            !data.dateOfBirth && "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        { data.dateOfBirth ? format(data.dateOfBirth, "dd/MM/yyyy") : "Pilih Tarikh"}
-                                                    </button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" trapFocus={false}>
-                                                    <Calendar
-                                                    mode="single"
-                                                    selected={data.dateOfBirth ? new Date(data.dateOfBirth) : undefined}
-                                                    onSelect={selectedDate => {
-                                                            setData('dateOfBirth', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
-                                                            setDateOfBirth(false);
-                                                        }}
-                                                    captionLayout={dropdown}
-                                                    fromYear={1900}
-                                                    toYear={2100}
-                                                    className="rounded-lg border shadow-sm"
+                                            <InputLabel
+                                                //  htmlFor="vacancies_title"
+                                                value={
+                                                <>
+                                                    Nama<span className="text-red-500">*</span>
+                                                </>
+                                                }
                                                 />
-                                                </PopoverContent>
-                                        </Popover>
-                                        <InputError
-                                        message={errors.start_date}
-                                        className="mt-2"
-                                        />
-                                    </div>
-                                    </div>
+                                            <TextInput
+                                                id="name "
+                                                name="name"
+                                                value={data.name}
+                                                className="mt-1 block w-full"
+                                                isFocused={true}
+                                                onChange={(e) =>
+                                                    setData('name', e.target.value)
+                                                }  
+                                                required                                  
+                                                />
+                                               
+                                            <InputError
+                                                message={errors.name}
+                                                className="mt-2"
+                                            />
+                                            
+                                        </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-3">
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        Nombor Kad Pengenalan<span className="text-red-500">*</span>
+                                                    </>
+                                                    }
+                                                    />
+                                                <TextInput
+                                                    id="ic_number"
+                                                    name="ic_number"
+                                                    value={data.ic_number}
+                                                    className="mt-1 block w-full"
+                                                    isFocused={true}
+                                                    onChange={(e) =>
+                                                        setData('ic_number', e.target.value)
+                                                    } 
+                                                    required                                  
+                                                />
+                                                <InputError
+                                                    message={errors.ic_number}
+                                                    className="mt-2"
+                                                />
+                                            </div>
+
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        Umur(Tahun)<span className="text-red-500">*</span>
+                                                    </>
+                                                    }
+                                                    required
+                                                />
+                                                <TextInput
+                                                    id="age"
+                                                    name="age"
+                                                    type="number"
+                                                    value={data.age}
+                                                    className="mt-1 block w-full"
+                                                    isFocused={true}
+                                                    onChange={(e) =>
+                                                        // setData('age', e.target.value)
+                                                        setAge(e.target.value)
+                                                    } 
+                                                    required                                  
+                                                />
+                                                {ageAlert === true && (
+                                                <div className="outline md:outline-red-400 rounded text-sm text-red-500 font-normal">Sila masukkan umur yang betul</div>
+                                                )}
+                                                <InputError
+                                                    message={errors.age}
+                                                    className="mt-2"
+                                                />
+                                            </div>
+
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        Tarikh Lahir<span className="text-red-500">*</span>
+                                                    </>
+                                                    }
+                                                />
+                                                <Popover open={dateOfBirth} onOpenChange={setDateOfBirth} modal={false}>
+                                                        <PopoverTrigger asChild>
+                                                            <button
+                                                                type="button"
+                                                                className={cn(
+                                                                    "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
+                                                                    !data.dateOfBirth && "text-muted-foreground"
+                                                                )}
+                                                            >
+                                                                { data.dateOfBirth ? format(data.dateOfBirth, "dd/MM/yyyy") : "Pilih Tarikh"}
+                                                            </button>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="w-auto p-0" trapFocus={false}>
+                                                            <Calendar
+                                                            mode="single"
+                                                            selected={data.dateOfBirth ? new Date(data.dateOfBirth) : undefined}
+                                                            onSelect={selectedDate => {
+                                                                    setData('dateOfBirth', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
+                                                                    setDateOfBirth(false);
+                                                                }}
+                                                            captionLayout={dropdown}
+                                                            fromYear={1900}
+                                                            toYear={2100}
+                                                            className="rounded-lg border shadow-sm"
+                                                        />
+                                                        </PopoverContent>
+                                                </Popover>
+                                                <InputError
+                                                message={errors.dateOfBirth}
+                                                className="mt-2"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-2">
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        Jantina<span className="text-red-500">*</span>
+                                                    </>
+                                                    }
+                                                    />
+                                                <RadioGroup
+                                                    name="gender"
+                                                    value={data.gender}
+                                                    onChange={handleGenderChange}
+                                                    options={[
+                                                        { value: 'Lelaki', label: 'Lelaki' },
+                                                        { value: 'Perempuan', label: 'Perempuan' },
+                                                    ]}
+                                                    columns={2}
+                                                    required
+                                                />
+                                                <InputError
+                                                message={errors.gender}
+                                                className="mt-2"
+                                                />
+                                            </div>
+
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        Bangsa<span className="text-red-500">*</span>
+                                                    </>
+                                                    }
+                                                    />
+                                                <TextInput
+                                                    id="ethnicity "
+                                                    name="ethnicity"
+                                                    value={data.ethnicity}
+                                                    className="mt-1 block w-full"
+                                                    isFocused={true}
+                                                    onChange={(e) =>
+                                                        setData('ethnicity', e.target.value)
+                                                    } 
+                                                    required                                  
+                                                    />
+                                                <InputError
+                                                message={errors.ethnicity}
+                                                className="mt-2"
+                                                />
+                                            </div>
+                                        </div>
 
                                     <div className="grid flex-1 gap-2 md:grid-cols-2">
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Jantina<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <RadioGroup
-                                                name="gender"
-                                                value={data.gender}
-                                                 onChange={handleGenderChange}
-                                                options={[
-                                                    { value: 'Lelaki', label: 'Lelaki' },
-                                                    { value: 'Perempuan', label: 'Perempuan' },
-                                                ]}
-                                                columns={2}
-                                            />
-                                        <InputError
-                                        message={errors.gender}
-                                        className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Bangsa<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="ethnicity "
-                                            name="ethnicity"
-                                            value={data.ethnicity}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('ethnicity', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                        message={errors.ethnicity}
-                                        className="mt-2"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid flex-1 gap-2 md:grid-cols-2">
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Status Perkahwinan<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <RadioGroup
-                                                name="marital_status"
-                                                value={data.marital_status}
-                                                 onChange={handleMaritalStatusChange}
-                                                options={[
-                                                    { value: 'Bujang', label: 'Bujang' },
-                                                    { value: 'Berkahwin', label: 'Berkahwin' },
-                                                    { value: 'Bercerai', label: 'Bercerai' },
-                                                ]}
-                                                columns={3}
-                                            />
-                                        <InputError
-                                            message={errors.marital_status}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Bilangan Anak(Bagi status berkahwin atau bercerai)
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="children_num"
-                                            name="children_num"
-                                            value={data.children_num}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('children_num', e.target.value)
-                                        }                                        
-                                            />
-                                        <InputError
-                                            message={errors.children_num}
-                                            className="mt-2"
-                                        />
-                                    </div>
-                                </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Alamat Tetap<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="address"
-                                            name="address"
-                                            value={data.address}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('address', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.address}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Alamat Surat Menyurat (Sekiranya berbeza dengan alamat tetap)
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="address_postal"
-                                            name="address_postal"
-                                            value={data.address_postal}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('address_postal', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.address_postal}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-3">
                                         <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                No.Telefon Bimbit (0123456789)<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="no_phone"
-                                            name="no_phone"
-                                            value={data.no_phone}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('no_phone', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.no_phone}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                No.Telefon Rumah(091234567)
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                             id="phone_home"
-                                            name="phone_home"
-                                            value={data.phone_home}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('phone_home', e.target.value)
-                                        }                                        
-                                            />
-                                        <InputError
-                                            message={errors.phone_home}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                E-Mel<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="email "
-                                            name="email"
-                                            value={data.email}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('email', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.email}
-                                            className="mt-2"
-                                        />
-                                    </div>
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Jangkaan Gaji(RM)<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <TextInput
-                                            id="expected_salary "
-                                            name="expected_salary"
-                                            value={data.expected_salary}
-                                            className="mt-1 block w-full"
-                                            isFocused={true}
-                                            onChange={(e) =>
-                                                setData('expected_salary', e.target.value)
-                                    }                                   
-                                            />
-                                        <InputError
-                                            message={errors.expected_salary}
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                        <InputLabel
-                                            //  htmlFor="vacancies_title"
-                                             value={
-                                             <>
-                                                Jangkaan Tarikh Masuk<span className="text-red-500">*</span>
-                                             </>
-                                        }
-                                            />
-                                        <Popover open={startDate} onOpenChange={setStartDate} modal={false}>
-                                        <PopoverTrigger asChild>
-                                                    <button
-                                                        type="button"
-                                                        className={cn(
-                                                            "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
-                                                            !data.start_date && "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        { data.start_date ? format(data.start_date, "dd/MM/yyyy") : "Pilih Tarikh"}
-                                                    </button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" trapFocus={false}>
-                                                    <Calendar
-                                                    mode="single"
-                                                    selected={data.start_date ? new Date(data.start_date) : undefined}
-                                                    onSelect={selectedDate => {
-                                                            setData('start_date', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
-                                                            setStartDate(false);
-                                                        }}
-                                                    captionLayout={dropdown}
-                                                    fromYear={1900}
-                                                    toYear={2100}
-                                                    className="rounded-lg border shadow-sm"
+                                            <InputLabel
+                                                //  htmlFor="vacancies_title"
+                                                value={
+                                                <>
+                                                    Status Perkahwinan<span className="text-red-500">*</span>
+                                                </>
+                                            }
                                                 />
-                                                </PopoverContent>
-                                        </Popover>
-                                        <InputError
-                                            message={errors.start_date}
-                                            className="mt-2"
-                                        />
+                                            <RadioGroup
+                                                    name="marital_status"
+                                                    value={data.marital_status}
+                                                    onChange={handleMaritalStatusChange}
+                                                    options={[
+                                                        { value: 'Bujang', label: 'Bujang' },
+                                                        { value: 'Berkahwin', label: 'Berkahwin' },
+                                                        { value: 'Bercerai', label: 'Bercerai' },
+                                                    ]}
+                                                    columns={3}
+                                                />
+                                            <InputError
+                                                message={errors.marital_status}
+                                                className="mt-2"
+                                            />
+                                        </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                            <InputLabel
+                                                //  htmlFor="vacancies_title"
+                                                value={
+                                                <>
+                                                    Bilangan Anak(Bagi status berkahwin atau bercerai)
+                                                </>
+                                            }
+                                                />
+                                            <TextInput
+                                                id="children_num"
+                                                name="children_num"
+                                                type="number"
+                                                value={data.children_num}
+                                                className="mt-1 block w-full"
+                                                isFocused={true}
+                                                onChange={(e) =>
+                                                    setData('children_num', e.target.value)
+                                            }                                        
+                                                />
+                                            <InputError
+                                                message={errors.children_num}
+                                                className="mt-2"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                            <InputLabel
+                                                //  htmlFor="vacancies_title"
+                                                value={
+                                                <>
+                                                    Alamat Tetap<span className="text-red-500">*</span>
+                                                </>
+                                            }
+                                                />
+                                            <TextInput
+                                                id="address"
+                                                name="address"
+                                                value={data.address}
+                                                className="mt-1 block w-full"
+                                                isFocused={true}
+                                                onChange={(e) =>
+                                                    setData('address', e.target.value)
+                                                }  
+                                                required                                 
+                                                />
+                                            <InputError
+                                                message={errors.address}
+                                                className="mt-2"
+                                            />
+                                        </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                            <InputLabel
+                                                //  htmlFor="vacancies_title"
+                                                value={
+                                                <>
+                                                    Alamat Surat Menyurat (Sekiranya berbeza dengan alamat tetap)
+                                                </>
+                                            }
+                                                />
+                                            <TextInput
+                                                id="address_postal"
+                                                name="address_postal"
+                                                value={data.address_postal}
+                                                className="mt-1 block w-full"
+                                                isFocused={true}
+                                                onChange={(e) =>
+                                                    setData('address_postal', e.target.value)
+                                        }                                   
+                                                />
+                                            <InputError
+                                                message={errors.address_postal}
+                                                className="mt-2"
+                                            />
+                                        </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-3">
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        No.Telefon Bimbit (0123456789)<span className="text-red-500">*</span>
+                                                    </>
+                                                }
+                                                    />
+                                                <TextInput
+                                                    id="no_phone"
+                                                    name="no_phone"
+                                                    value={data.no_phone}
+                                                    className="mt-1 block w-full"
+                                                    isFocused={true}
+                                                    onChange={(e) =>
+                                                        setData('no_phone', e.target.value)
+                                                    }    
+                                                    required                               
+                                                    />
+                                                <InputError
+                                                    message={errors.no_phone}
+                                                    className="mt-2"
+                                                />
+                                            </div>
+
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        No.Telefon Rumah(091234567)
+                                                    </>
+                                                }
+                                                    />
+                                                <TextInput
+                                                    id="phone_home"
+                                                    name="phone_home"
+                                                    value={data.phone_home}
+                                                    className="mt-1 block w-full"
+                                                    isFocused={true}
+                                                    onChange={(e) =>
+                                                        setData('phone_home', e.target.value)
+                                                }                                        
+                                                    />
+                                                <InputError
+                                                    message={errors.phone_home}
+                                                    className="mt-2"
+                                                />
+                                            </div>
+
+                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                                <InputLabel
+                                                    //  htmlFor="vacancies_title"
+                                                    value={
+                                                    <>
+                                                        E-Mel<span className="text-red-500">*</span>
+                                                    </>
+                                                }
+                                                    />
+                                                <TextInput
+                                                    id="email "
+                                                    name="email"
+                                                    value={data.email}
+                                                    className="mt-1 block w-full"
+                                                    isFocused={true}
+                                                    onChange={(e) =>
+                                                        setData('email', e.target.value)
+                                                    }   
+                                                    required                                
+                                                    />
+                                                <InputError
+                                                    message={errors.email}
+                                                    className="mt-2"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                            <InputLabel
+                                                //  htmlFor="vacancies_title"
+                                                value={
+                                                <>
+                                                    Jangkaan Gaji(RM)<span className="text-red-500">*</span>
+                                                </>
+                                            }
+                                                />
+                                            <TextInput
+                                                id="expected_salary "
+                                                name="expected_salary"
+                                                value={data.expected_salary}
+                                                className="mt-1 block w-full"
+                                                isFocused={true}
+                                                onChange={(e) =>
+                                                    setData('expected_salary', e.target.value)
+                                                } 
+                                                required                                  
+                                                />
+                                            <InputError
+                                                message={errors.expected_salary}
+                                                className="mt-2"
+                                            />
+                                        </div>
+
+                                        <div className="grid flex-1 gap-2 md:grid-cols-1">
+                                            <InputLabel
+                                                //  htmlFor="vacancies_title"
+                                                value={
+                                                <>
+                                                    Jangkaan Tarikh Masuk<span className="text-red-500">*</span>
+                                                </>
+                                            }
+                                                />
+                                            <Popover open={startDate} onOpenChange={setStartDate} modal={false}>
+                                            <PopoverTrigger asChild>
+                                                        <button
+                                                            type="button"
+                                                            className={cn(
+                                                                "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
+                                                                !data.start_date && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            { data.start_date ? format(data.start_date, "dd/MM/yyyy") : "Pilih Tarikh"}
+                                                        </button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" trapFocus={false}>
+                                                        <Calendar
+                                                        mode="single"
+                                                        selected={data.start_date ? new Date(data.start_date) : undefined}
+                                                        onSelect={selectedDate => {
+                                                                setData('start_date', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
+                                                                setStartDate(false);
+                                                            }}
+                                                        captionLayout={dropdown}
+                                                        fromYear={1900}
+                                                        toYear={2100}
+                                                        className="rounded-lg border shadow-sm"
+                                                    />
+                                                    </PopoverContent>
+                                            </Popover>
+                                            <InputError
+                                                message={errors.start_date}
+                                                className="mt-2"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
 
@@ -857,7 +923,7 @@ console.log(vacancies);
                             {currentPart === 5 && (
                                 <div>
                                     <p className='font-bold'>Bahagian 5 : Maklumat Tambahan Pekerjaan Terkini</p>
-                                    <div className='mt-4'>
+                                    <div className='mt-4 space-y-4'>
                                         <p className='text-sm font-bold underline'>Tambahan Maklumat Pekerjaan</p>
                                             <div className="grid flex-1 gap-2 md:grid-cols-2">
                                             <div className="grid flex-1 gap-2 md:grid-cols-1">
@@ -865,7 +931,7 @@ console.log(vacancies);
                                                     //  htmlFor="vacancies_title"
                                                     value={
                                                  <>
-                                                    Gaji Pokok Semasa (RM)<span className="text-red-500">*</span>
+                                                    Gaji Pokok Semasa (RM)
                                                  </>
                                                 }
                                                  />
@@ -910,82 +976,13 @@ console.log(vacancies);
                                                  />
                                             </div>
                                             </div>
-                                    
-                                            <div className="grid flex-1 gap-2 md:grid-cols-2">
-                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                                <InputLabel
-                                                    //  htmlFor="vacancies_title"
-                                                    value={
-                                                 <>
-                                                    Jumlah Bonus Terkini (RM)
-                                                 </>
-                                                }
-                                                 />
-                                                <TextInput
-                                                    id="bonus"
-                                                    name="bonus"
-                                                    value={data.bonus}
-                                                    className="mt-1 block w-full"
-                                                    isFocused={true}
-                                                    onChange={(e) =>
-                                                        setData('bonus', e.target.value)
-                                                }                        
-                                                 />
-                                                <InputError
-                                                    message={errors.bonus}
-                                                    className="mt-2"
-                                                 />
-                                           </div> 
 
                                            <div className="grid flex-1 gap-2 md:grid-cols-1">
                                                 <InputLabel
                                                     //  htmlFor="vacancies_title"
                                                     value={
                                                  <>
-                                                    Tarikh Bonus Terkini                    
-                                                 </>
-                                                }
-                                                 />
-                                                <Popover open={bonusDate} onOpenChange={setBonusDate} modal={false}>
-                                        <PopoverTrigger asChild>
-                                                    <button
-                                                        type="button"
-                                                        className={cn(
-                                                            "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
-                                                            !data.bonus_date && "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        { data.bonus_date ? format(data.bonus_date, "dd/MM/yyyy") : "Pilih Tarikh"}
-                                                    </button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" trapFocus={false}>
-                                                    <Calendar
-                                                    mode="single"
-                                                    selected={data.bonus_date ? new Date(data.bonus_date) : undefined}
-                                                    onSelect={selectedDate => {
-                                                            setData('bonus_date', selectedDate ? format(selectedDate, 'dd-MM-yyyy') : '');
-                                                            setBonusDate(false);
-                                                        }}
-                                                    captionLayout={dropdown}
-                                                    fromYear={1900}
-                                                    toYear={2100}
-                                                    className="rounded-lg border shadow-sm"
-                                                />
-                                                </PopoverContent>
-                                        </Popover>
-                                                <InputError
-                                                    message={errors.bonus_date}
-                                                    className="mt-2"
-                                                 />
-                                           </div>
-                                           </div>
-
-                                           <div className="grid flex-1 gap-2 md:grid-cols-1">
-                                                <InputLabel
-                                                    //  htmlFor="vacancies_title"
-                                                    value={
-                                                 <>
-                                                    Laporkan Kepada Siapa ? (Nama Pegawai Anda)<span className="text-red-500">*</span>
+                                                    Laporkan Kepada Siapa ? (Nama Pegawai Anda)
                                                  </>
                                             }
                                                  />
@@ -1010,7 +1007,7 @@ console.log(vacancies);
                                                     //  htmlFor="vacancies_title"
                                                     value={
                                                  <>
-                                                    Bilangan Orang Yang Melapor Kepada Anda<span className="text-red-500">*</span>
+                                                    Bilangan Orang Yang Melapor Kepada Anda
                                                  </>
                                             }
                                                  />
@@ -1035,7 +1032,7 @@ console.log(vacancies);
                                                     //  htmlFor="vacancies_title"
                                                     value={
                                                  <>
-                                                    Tempoh Notis Peletakan Jawatan Untuk Pekerjaan Semasa (Minggu / Bulan)<span className="text-red-500">*</span>
+                                                    Tempoh Notis Peletakan Jawatan Untuk Pekerjaan Semasa (Minggu / Bulan)
                                                  </>
                                              }
                                                  />
@@ -1061,7 +1058,7 @@ console.log(vacancies);
                             {/* part 6/7/8 */}
                             {currentPart === 6 && (
                                 <div>
-                                    <div className='mt-4'>
+                                    <div className='mt-4 space-y-4'>
                                     <p className='font-bold'>Bahagian 6 : Penguasaan Bahasa</p>            
                                             <div className="grid flex-1 gap-1 md:grid-cols-1">
                                                 <InputLabel
@@ -1154,7 +1151,7 @@ console.log(vacancies);
                                            </div>                                  
                                     </div>
                                 
-                                    <div className='mt-4'>    
+                                    <div className='mt-4 space-y-4'>    
                                     <p className='font-bold'>Bahagian 7 : Maklumat Lain</p>
                                             <div className="grid flex-1 gap-2 md:grid-cols-1">
                                                 <InputLabel
@@ -1213,18 +1210,8 @@ console.log(vacancies);
                                                 ]}
                                                 columns={2}
                                                 />
-                                                <TextInput
-                                                    id="bankruptcy_details"
-                                                    name="bankruptcy_details"
-                                                    value={data.bankruptcy_details}
-                                                    className="mt-1 block w-full"
-                                                    isFocused={true}
-                                                    onChange={(e) =>
-                                                        setData('bankruptcy_details', e.target.value)
-                                                }                                 
-                                                 />
                                                 <InputError
-                                                    message={errors.bankruptcy_details}
+                                                    message={errors.bankruptcy}
                                                     className="mt-2"
                                                  />
                                             </div> 
@@ -1351,7 +1338,7 @@ console.log(vacancies);
                                             </div>                                  
                                     </div>
 
-                                    <div className='mt-4'>
+                                    <div className='mt-4 space-y-4'>
                                     <p className='font-bold'>Bahagian 8 : Perubatan & Keadaan Fizikal</p>            
                                             <div className="grid flex-1 gap-2 md:grid-cols-1">
                                                 <InputLabel
@@ -1431,7 +1418,7 @@ console.log(vacancies);
                                                     value={
                                                  <>
                                                     3) Adakah anda sedang hamil atau merancang memiliki
-                                                    bayi tidak lama lagi? (untuk calon perempuan sahaja)<span className="text-red-500">*</span>
+                                                    bayi tidak lama lagi? (untuk calon perempuan sahaja)
                                                  </>
                                             }
                                                  />
@@ -1468,7 +1455,7 @@ console.log(vacancies);
                             {/* part 9/10/11 */}
                             {currentPart === 7 && (
                                 <div>
-                                    <div className='mt-4'>
+                                    <div className='mt-4 space-y-4'>
                                     <p className='font-bold'>Bahagian 9 : Kemahiran/ Bakat/ Hobi</p>            
                                             <div className="grid flex-1 gap-2 md:grid-cols-1">
                                                 <InputLabel
@@ -1496,7 +1483,7 @@ console.log(vacancies);
                                             </div>                                 
                                     </div>
                                 
-                                    <div className='mt-4'>    
+                                    <div className='mt-4 space-y-4'>    
                                     <p className='font-bold'>Bahagian 10 : Maklumat Orang Perlu Dihubungi Semasa Kecemassan</p>
                                             <div className="grid flex-1 gap-2 md:grid-cols-1">
                                                 <InputLabel
@@ -1572,7 +1559,7 @@ console.log(vacancies);
                                             </div>                                
                                     </div>
 
-                                    <div className='mt-4'>
+                                    <div className='mt-4 space-y-4'>
                                     <p className='font-bold'>Bahagian 11 : Rujukan (Selain Keluarga)</p>
                                     <div className='mt-2'>
                                         <p className='text-sm font-bold underline'>Rujukan Pertama</p>            
@@ -1678,7 +1665,7 @@ console.log(vacancies);
                                                                              
                                     </div>
                                     </div>
-                                    <div className='mt-4'>
+                                    <div className='mt-4 space-y-4'>
                                     <p className='font-bold'>Resume atau Sijil</p>
                                     <div className="grid flex-1 gap-2 md:grid-cols-1">
                                                 <InputLabel
@@ -1692,7 +1679,7 @@ console.log(vacancies);
                                                 <FileInput
                                                     id="resume"
                                                     name="resume"
-                                                    accept=".pdf,.jpg,.jpeg,.png"
+                                                    accept=".pdf"
                                                     maxSize={2}
                                                     showPreview={true}
                                                     onChange={(e) =>
@@ -1725,7 +1712,7 @@ console.log(vacancies);
                                     Hantar Undian
                                 </button>
                             )} */}
-                            {(currentPart === totalParts) && (
+                            {(currentPart === totalParts && allAnswered(currentPart)) && (
                                 <PrimaryButton
                                     onClick={submit}
                                     // disabled={currentPart === totalParts}
@@ -1734,7 +1721,7 @@ console.log(vacancies);
                                     Hantar
                                 </PrimaryButton>
                             )}
-                            {(currentPart !== totalParts) && (
+                            {(currentPart !== totalParts && allAnswered(currentPart)) && (
                                 <PrimaryButton
                                     onClick={handleNext}
                                     disabled={currentPart === totalParts}

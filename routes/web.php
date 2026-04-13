@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\DashboardController;
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
@@ -18,19 +19,24 @@ use App\Http\Controllers\IndexController;
 //     ]);
 // });
 
-    Route::get('/', [IndexController::class, 'welcome'])->name('welcome');
+Route::get('/', [IndexController::class, 'welcome'])->name('welcome');
 
-    //application
-    Route::get('/application', [ApplicationController::class, 'applicationIndex'])->name('application');
-    Route::post('/application', [ApplicationController::class, 'saveApplication'])->name('application.save');
+//application
+Route::get('/application', [ApplicationController::class, 'applicationIndex'])->name('application');
+Route::post('/application', [ApplicationController::class, 'saveApplication'])->name('application.save');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    //dashboard
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/application-received/{id}', [DashboardController::class, 'viewApplicantList'])->name('viewApplicantList');
+
     //user
     Route::get('/user', [UserController::class, 'userIndex'])->name('user');
+    Route::post('/user/delete', [UserController::class, 'deleteUser'])->name('user.delete');
 
     //vacancy
     Route::get('/vacancy', [VacancyController::class, 'vacancyIndex'])->name('vacancy');
@@ -42,10 +48,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/application-received/view/{id}', [ApplicationController::class, 'viewApplicationReceived'])->name('viewApplicationReceived');
     Route::post('/application-received/delete', [ApplicationController::class, 'deleteApplication'])->name('application.delete');
 
+    //download
+    Route::get('/application-received/download/{id}', [ApplicationController::class, 'downloadApplicationAttacthment'])->name('application.downloadAttachment');
+    
+    //pdf
+    Route::get('/testpdf', [ApplicationController::class, 'testpdf'])->name('testpdf');
+    Route::get('/application-received/print/{id}', [ApplicationController::class, 'applicationPdf'])->name('applicationPdf');
+    Route::get('/application-received/printtest', [ApplicationController::class, 'applicationPdftest'])->name('applicationPdftest');
+
     //profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    
 });
 
 require __DIR__.'/auth.php';

@@ -10,7 +10,6 @@ export default function GuestLayout({ children }) {
                 backgroundSize: "100% 100%",
                 }}> 
         <div className="flex flex-col items-center pt-6 sm:justify-center sm:pt-0">
-            
             <div>
                 <Link href="/">
                     <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />

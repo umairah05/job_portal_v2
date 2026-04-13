@@ -7,6 +7,8 @@ import { useState, useEffect} from 'react';
 // import ApplicationIndex from './Application/ApplicationIndex';
 import ViewApplicationReceived from './ViewApplicationReceived';
 import ApplicationDelete from './Partials/ApplicationDelete';
+import { ChartNoAxesColumnDecreasingIcon, Printer } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 export default function ApplicationReceivedIndex({applications, vacancies, success}) {
 
@@ -59,59 +61,51 @@ function getVacancyTitle(vacancy_uuid)
 
         },
 
-        // {
-        //     Header: 'Pautan Iklan',
-        //     accessor: [],
-        //     Cell: ({ row }) => (
-        //         <div className="flex flex-col">
-        //             <div className='font-semibold'>{row.ads_link}</div> 
-        //         </div>
-        //     ),
-        // },
-        // {
-        //     Header: 'Jenis Entiti',
-        //     accessor: ['vendor_type',],
-        //     Cell: ({ row }) => (
-        //         <div className="flex flex-col text-sm">
-        //             {row.vendor_type === 'company' && ('Syarikat')}
-        //             {row.vendor_type === 'gov_entity' && ('Perbadanan / Entiti Kerajaan')}
-        //             {row.vendor_type === 'cooperation' && ('Koperasi')}
-        //             {row.vendor_type === 'organisation' && ('Pertubuhan / Kelab')}
-        //         <p> </p>
-        //             {row.vendor_company_type === 'bhd' && ('Berhad')}
-        //             {row.vendor_company_type === 'sdn-bhd' && ('Sendirian Berhad')}
-        //             {row.vendor_company_type === 'partnership' && ('Perkongsian')}
-        //             {row.vendor_company_type === 'sole-ownership' && ('Milikan Tunggal')}
-        //         </div>
-        //     ),
-        // },
-        // { Header: 'No. Telefon', accessor: 'vendor_phone' },
         {
             Header: 'Tindakan',
             accessor: 'actions',
-            Cell: ({ row }) => (
+            Cell: ({ row }) => {
+                 const dataSnapshot = JSON.parse(row.application_snapshot);
+                 console.log(dataSnapshot);
+                return (
                 <div className="flex space-x-2 gap-2">
                     {/* <AllotteeEdit allottee={row} /> */}
                     
                     <Link href={route('viewApplicationReceived', row.id)}>
                     {<PrimaryButton
                         className="px-2 py-1 text-white bg-blue-500 rounded hover:bg-red-600"
-                        // onClick={() => handleDelete(row.id)}  
                     >
                         Papar
                     </PrimaryButton>}
                     </Link>
                 
-                    {<PrimaryButton
-                        className="px-2 py-1 text-white bg-green-500 rounded hover:bg-red-600"
+                    <a href={route('applicationPdf',row.id)} target='_blank'>
+                    <PrimaryButton
+                        className="px-2 py-1 text-white bg-blue-500 rounded hover:bg-red-600"
                         // onClick={() => handleDelete(row.id)}  
                     >
                         Cetak
-                    </PrimaryButton>}
+                    </PrimaryButton>
+                    </a>
+                    {/* {dataSnapshot.resume !== null && */}
+                    {Object.keys(dataSnapshot.resume).length > 0 &&
+                        (
+                            <button 
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    window.location.href = route('application.downloadAttachment', { id: row.id });
+                                }}
+                            >
+                                <PrimaryButton className="gap-2"><Printer /> Lampiran</PrimaryButton>
+                            </button>
+                        )
+                    }
+
 
                     <ApplicationDelete applications={row}/>
-                </div>
-            ),
+                </div>)
+            }
+            
         },
     ];
 
@@ -127,8 +121,6 @@ function getVacancyTitle(vacancy_uuid)
             // setTimeout(() => setSuccessMessage(false), 3000);
         }
     }, [success]);
-
-
 
     const formatDateTime = (dateTimeString) => {
         if (!dateTimeString) return '-';
@@ -146,17 +138,21 @@ function getVacancyTitle(vacancy_uuid)
     return (
         <AuthenticatedLayout
             header={
+                <div className="flex items-center gap-2">
+                    <Link
+                        href={route('dashboard')}
+                        className="hover:bg-gray-100 rounded px-1 transition-colors"
+                    >
+                        <ChevronLeft className="w-7 h-7" />
+                    </Link>
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Senarai Permohonan
                 </h2>
+                </div>
             }
         >
             <Head title="Dashboard" />
-
-            
-
-            <div className="py-12">
-                
+            <div className="py-12">             
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
@@ -176,6 +172,5 @@ function getVacancyTitle(vacancy_uuid)
                 </div>
             </div>
         </AuthenticatedLayout>
-    );
-    
+    );   
 }

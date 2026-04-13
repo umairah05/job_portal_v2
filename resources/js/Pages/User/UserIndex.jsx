@@ -3,6 +3,8 @@ import { Head } from '@inertiajs/react';
 import DataTable from '@/Components/DataTable';
 import { Link } from '@inertiajs/react';
 import PrimaryButton from '@/Components/PrimaryButton';
+import DeleteUser from './Partials/DeleteUser';
+import { useState, useEffect} from 'react';
 
 export default function User({user}) {
 console.log(user);
@@ -39,49 +41,31 @@ console.log(user);
             ),
 
         },
-        // {
-        //     Header: 'Jenis Entiti',
-        //     accessor: ['vendor_type',],
-        //     Cell: ({ row }) => (
-        //         <div className="flex flex-col text-sm">
-        //             {row.vendor_type === 'company' && ('Syarikat')}
-        //             {row.vendor_type === 'gov_entity' && ('Perbadanan / Entiti Kerajaan')}
-        //             {row.vendor_type === 'cooperation' && ('Koperasi')}
-        //             {row.vendor_type === 'organisation' && ('Pertubuhan / Kelab')}
-        //         <p> </p>
-        //             {row.vendor_company_type === 'bhd' && ('Berhad')}
-        //             {row.vendor_company_type === 'sdn-bhd' && ('Sendirian Berhad')}
-        //             {row.vendor_company_type === 'partnership' && ('Perkongsian')}
-        //             {row.vendor_company_type === 'sole-ownership' && ('Milikan Tunggal')}
-        //         </div>
-        //     ),
-        // },
-        // { Header: 'No. Telefon', accessor: 'vendor_phone' },
-        // {
-        //     Header: 'Tindakan',
-        //     accessor: 'actions',
-        //     Cell: ({ row }) => (
-        //         <div className="flex space-x-2 gap-2">
-        //             {/* <AllotteeEdit allottee={row} /> */}
-        //             <Link>
-        //                 <PrimaryButton
-        //                     className="px-2 py-1 text-white"
-        //                 >
-        //                     Lihat Butiran
-        //                 </PrimaryButton>
-        //             </Link>
-        //             {/* <PrimaryButton
-        //                 className="px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
-        //                 onClick={() => handleDelete(row.id)}
-        //             >
-        //                 Tolak Permohonan
-        //             </PrimaryButton> */}
-        //         </div>
-        //     ),
-        // },
+
+        {
+            Header: 'Tindakan',
+            accessor: 'actions',
+            Cell: ({ row }) => (
+                <div className="flex space-x-2 gap-2">
+                    <DeleteUser user={row}/>
+                </div>
+            ),
+        },
     ];
 
-    const formatDateTime = (dateTimeString) => {
+    const submitRegister = (e) => 
+    {
+        e.preventDefault();
+
+        post(route('vendor.register.store'), {
+            preserveScroll: true,
+            preserveState: (page) => Object.keys(page.props.errors).length,
+            onFinish: () => reset('password', 'password_confirmation'),
+        });
+    }; 
+
+    const formatDateTime = (dateTimeString) => 
+    {
         if (!dateTimeString) return '-';
         const date = new Date(dateTimeString);
         
@@ -96,17 +80,33 @@ console.log(user);
 
     return (
         <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+            header={ 
+            <>
+            <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Penguna
-                </h2>
+            </h2>
+
+            
+                
+            </>
             }
         >
             <Head title="Dashboard" />
 
+           
+
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                        <Link href={route('register')}
+                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                        >
+                            {<PrimaryButton
+                                className="mt-4 px-3 py-2 text-white bg-orange-400 rounded-md hover:bg-red-200"
+                            >
+                                Register
+                            </PrimaryButton>}
+                        </Link>
                         <div className="p-6 text-gray-900">
                             <DataTable columns={columns} data={user} className='mt-4'/>
                         </div>

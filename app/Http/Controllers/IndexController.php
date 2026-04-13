@@ -11,7 +11,6 @@ class IndexController extends Controller
 {
     public function welcome(): Response
     {
-
         $vacancies = Vacancy::where('start_date','<=',now())->where('end_date','>=',now())->get();
         // dd("test");
         // dd($vacancy);

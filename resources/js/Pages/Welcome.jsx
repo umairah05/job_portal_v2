@@ -9,7 +9,7 @@ import { useState } from 'react';
 export default function Welcome({ auth, canResetPassword, status, vacancies }) {
     const [formType, setFormType] = useState('login'); // 'login', 'register', or 'admin'
 
-    console.log(vacancies);
+    // console.log(vacancies);
     const handleImageError = () => {
         document
             .getElementById('screenshot-container')
@@ -35,25 +35,25 @@ export default function Welcome({ auth, canResetPassword, status, vacancies }) {
 
     // const [vacancies, setvacancies] = useState([]);
 
-    const submitLogin = (e) => {
-        e.preventDefault();
+    // const submitLogin = (e) => {
+    //     e.preventDefault();
 
-        post(route('vendor.login.store'), {
-            preserveScroll: true,
-            preserveState: (page) => Object.keys(page.props.errors).length,
-            onFinish: () => reset('password'),
-        });
-    };
+    //     post(route('vendor.login.store'), {
+    //         preserveScroll: true,
+    //         preserveState: (page) => Object.keys(page.props.errors).length,
+    //         onFinish: () => reset('password'),
+    //     });
+    // };
 
-    const submitRegister = (e) => {
-        e.preventDefault();
+    // const submitRegister = (e) => {
+    //     e.preventDefault();
 
-        post(route('vendor.register.store'), {
-            preserveScroll: true,
-            preserveState: (page) => Object.keys(page.props.errors).length,
-            onFinish: () => reset('password', 'password_confirmation'),
-        });
-    };
+    //     post(route('vendor.register.store'), {
+    //         preserveScroll: true,
+    //         preserveState: (page) => Object.keys(page.props.errors).length,
+    //         onFinish: () => reset('password', 'password_confirmation'),
+    //     });
+    // };
 
     return (
         <>
@@ -125,49 +125,38 @@ export default function Welcome({ auth, canResetPassword, status, vacancies }) {
                                                 {/* {formType === 'register' ? 'Daftar Sebagai Vendor' : formType === 'admin' ? 'Log Masuk Pentadbir' : 'Log Masuk Vendor'} */}
                                             </h2>
 
-                                            {formType === 'login' ? (
-                                                // Vendor Login Form
-                                                <form className="md:mt-8 md:space-y-6" action="#" onSubmit={submitLogin}>
-                                                    <div>
-                                                        {/* {vacancies[0].vacancies_title} */}
-                                                        {vacancies.length === 0? "Tiada": null}
-                                                        {vacancies.length > 0 && (
-                                                        <div className="mt-6">
-                                                            <h3 className="text-lg text-gray-900 font-bold mb-4">Senarai Kerja Kosong Sedang Dibuka</h3>
-                                                            <div className="grid gap-2">
-                                                                {vacancies.map((vacancy) => (
-                                                                    <div key={vacancy.id} className="border rounded-lg p-4 bg-gray-50">
-                                                                        <div className="flex justify-between items-start">
-                                                                            <div className="grid gap-2 flex-1">
-                                                                                <div>
-                                                                                    <p className="font-medium text-gray-900">{vacancy.vacancies_title}</p>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <p className="font-medium">{vacancy.vacancies_location}</p>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <Link href={vacancy.ads_link}>
-                                                                                    
-                                                                                    <PrimaryButton
-                                                                                    
-                                                                                        className="text-gray-900 ml-2 cursor-pointer"
-                                                                                    >
-                                                                                        Iklan
-                                                                                    </PrimaryButton>
-                                                                                    </Link>
-                                                                                    
-                                                                                </div>
-                                                                            </div>
+                                            <div>
+                                                {/* {vacancies[0].vacancies_title} */}
+                                                {vacancies.length === 0? "Tiada": null}
+                                                {vacancies.length > 0 && (
+                                                <div className="mt-6">
+                                                    <h3 className="text-lg text-gray-900 font-bold mb-4">Senarai Kerja Kosong Sedang Dibuka</h3>
+                                                    <div className="grid gap-2">
+                                                        {vacancies.map((vacancy) => (
+                                                            <div key={vacancy.id} className="border rounded-lg p-4 bg-gray-50">
+                                                                <div className="flex justify-between items-start">
+                                                                    <div className="grid gap-2 flex-1">
+                                                                        <div>
+                                                                            <p className="font-medium text-gray-900">{vacancy.vacancies_title}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="font-medium">{vacancy.vacancies_location}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <a href={vacancy.ads_link} target="_blank">                                                            
+                                                                                <PrimaryButton className="text-gray-900 ml-2 cursor-pointer">
+                                                                                    Iklan
+                                                                                </PrimaryButton>
+                                                                            </a>                                                                            
                                                                         </div>
                                                                     </div>
-                                                                ))}
+                                                                </div>
                                                             </div>
-                                                        </div>    
-                                                        )}
+                                                        ))}
                                                     </div>
-                                                </form>
-                                            )  : ""
-                                        }
+                                                </div>    
+                                                )}
+                                            </div>                                       
                                         </div>
                                     </div>
                                 </div>
@@ -177,24 +166,6 @@ export default function Welcome({ auth, canResetPassword, status, vacancies }) {
                 </div>
             </div>
             <footer className="text-center text-sm text-black border-t py-4">
-                {/* {auth.user ? (
-                    <Link
-                        href={route('dashboard')}
-                        className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]"
-                    >
-                        Dashboard
-                    </Link>
-                ) : (
-                    <>
-                        <Link
-                            href={route('login')}
-                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] hover:underline focus-visible:underline"
-                        >
-                            Log Masuk Pentadbir Sistem
-                        </Link>
-                    </>
-                )} */}
-                
             | PKPP Agro Sdn Bhd © 2025 Hak Cipta Terpelihara
             </footer>
         </>

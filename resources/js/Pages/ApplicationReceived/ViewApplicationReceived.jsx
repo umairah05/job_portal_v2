@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { useState, useEffect} from 'react';
 import InputLabel from '@/Components/InputLabel';
 import ValueView from '@/Components/ValueView';
+import { ChevronLeft } from 'lucide-react';
 // import ApplicationDelete from './Partials/ApplicationDelete';
 
 export default function ViewApplicationReceived({application, success}) {
@@ -71,12 +72,12 @@ console.log(parsed);
                 </div>
             ),
         },
-        {Header: 'Tarikh Mula & Tamat', accessor: ['start_school'],
+        {Header: 'Tahun Mula & Tamat', accessor: ['start_school'],
             Cell: ({ row }) => (
                 <div className="flex items-center space-x-2">
-                    <div className='font-normal text-sm'>{formatDateTime(row.start_school)}</div> 
+                    <div className='font-normal text-sm'>{row.start_school}</div> 
                     <span className="text-gray-950">-</span>
-                    <div className='font-normal text-sm'>{formatDateTime(row.end_school)}</div>
+                    <div className='font-normal text-sm'>{row.end_school}</div>
                 </div>
             ),
         },
@@ -114,9 +115,9 @@ console.log(parsed);
         {Header: 'Tahun Mula & Tamat Bekerja', accessor: ['start_year'],
             Cell: ({ row }) => (
                 <div className="flex items-center space-x-2">
-                    <div className='font-normal text-sm'>{formatDateTime(row.start_year)}</div> 
+                    <div className='font-normal text-sm'>{row.start_year}</div> 
                     <span className="text-gray-950">-</span>
-                    <div className='font-normal text-sm'>{formatDateTime(row.end_year)}</div>
+                    <div className='font-normal text-sm'>{row.end_year}</div>
                 </div>
             ),
         },
@@ -172,13 +173,20 @@ console.log(parsed);
     return (
         <AuthenticatedLayout
             header={
+                <div className="flex items-center gap-2">
+                    <Link
+                        href={route('applicationReceived')}
+                        className="hover:bg-gray-100 rounded px-1 transition-colors"
+                    >
+                        <ChevronLeft className="w-7 h-7" />
+                    </Link>
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Maklumat Pemohon
                 </h2>
+                </div>
             }
         >
             <Head title="Dashboard" />
-
 
             <div className="py-12">
                 
@@ -365,27 +373,27 @@ console.log(parsed);
                             </div>
                             </div>
 
-                            {/* part 2 : butiran keluarga */}
+                            {/* part 2 : butiran keluarga, pendidikan, bekerja */}
                             <div>
                                 <div>
                                     <div className='mt-4'>
                                     <p className='text-l font-bold'>Butiran Keluarga</p>
                                     </div>
-                                    <DataTablePrintView columns={familycolumns} data={parsed.familyMembers} className='mt-4'/>
+                                    <DataTablePrintView columns={familycolumns} data={parsed.familyMembers ?? []} className='mt-4'/>
                                 </div>
 
                                 <div>
                                     <div className='mt-4'>
                                     <p className='text-l font-bold'>Taraf Pendidikan</p>
                                     </div>
-                                    <DataTablePrintView columns={educationcolumns} data={parsed.education} className='mt-4'/>
+                                    <DataTablePrintView columns={educationcolumns} data={parsed.education ?? []} className='mt-4'/>
                                 </div>
 
                                 <div>
                                     <div className='mt-4'>
                                     <p className='text-l font-bold'>Pengalaman Bekerja</p>
                                     </div>
-                                    <DataTablePrintView columns={employercolumns} data={parsed.employers} className='mt-4'/>
+                                    <DataTablePrintView columns={employercolumns} data={parsed.employers ?? []} className='mt-4'/>
                                 </div>
                             </div>
 
@@ -402,7 +410,7 @@ console.log(parsed);
                                                     </>
                                                 }
                                             />
-                                            <ValueView value={formatCurrency(parsed.salary)} />
+                                            <ValueView value={formatCurrency(parsed.salary ?? 0)} />
                                         </div>
                                     </div>
 
@@ -416,25 +424,7 @@ console.log(parsed);
                                                     </>
                                                 }
                                             />
-                                            <ValueView value={formatCurrency(parsed.allowance)} />
-                                        </div>
-                                    </div>
-
-                                    <div className='grid flex-1 gap-2 my-2'>
-                                        <div className=''>
-                                            <InputLabel
-                                                htmlFor="vendor_status"
-                                                value={
-                                                    <>
-                                                        Jumlah Bonus Terakhir yang diperolehi dan Bila
-                                                    </>
-                                                }
-                                            />
-                                            <div className='flex gap-2 items-center'>
-                                                <ValueView value={formatCurrency(parsed.bonus)} />
-                                                <span>,</span>
-                                                <ValueView value={parsed.bonus_date} />
-                                            </div>
+                                            <ValueView value={formatCurrency(parsed.allowance ?? 0)} />
                                         </div>
                                     </div>
 
@@ -448,7 +438,7 @@ console.log(parsed);
                                                     </>
                                                 }
                                             />
-                                            <ValueView value={parsed.report_to} />
+                                            <ValueView value={parsed.report_to ?? "-"} />
                                         </div>  
                                     </div>
 
@@ -462,7 +452,7 @@ console.log(parsed);
                                                     </>
                                                 }
                                             />
-                                            <ValueView value={parsed.report_count} />
+                                            <ValueView value={parsed.report_count ?? "-"} />
                                         </div>
                                     </div>
 
@@ -477,7 +467,7 @@ console.log(parsed);
                                                 }
                                             />
                                             <div className='flex gap-2 items-center'>
-                                                <ValueView value={parsed.notice_period} />   
+                                                <ValueView value={parsed.notice_period ?? "-"} />   
                                                 <span>Minggu</span>
                                             </div>
                                         </div>
@@ -508,8 +498,8 @@ console.log(parsed);
                                                     <td className="border border-gray-900 w-1/2">{parsed.language_english}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td className="border border-gray-900 w-1/2">Bahasa lain(jika ada):{parsed.other_language}</td>
-                                                    <td className="border border-gray-900 w-1/2">{parsed.language}</td>
+                                                    <td className="border border-gray-900 w-1/2">Bahasa lain(jika ada):{parsed.other_language ?? "-"}</td>
+                                                    <td className="border border-gray-900 w-1/2">{parsed.language ?? "-"}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -658,7 +648,7 @@ console.log(parsed);
                                                     </>
                                                 }
                                             />
-                                            <ValueView value={parsed.pregnancy_status} />
+                                            <ValueView value={parsed.pregnancy_status ?? "-"} />
                                         </div>
                                     </div> 
                                 </div>
@@ -749,7 +739,7 @@ console.log(parsed);
                                                     </>
                                                 }                                                
                                             />
-                                             <ValueView value={parsed.reference_name_2}  />
+                                             <ValueView value={parsed.reference_name_2 ?? "-"}  />
                                         </div>
                                     </div> 
 
@@ -763,7 +753,7 @@ console.log(parsed);
                                                     </>
                                                 }                                                
                                             />
-                                             <ValueView value={parsed.reference_phone_2}  />
+                                             <ValueView value={parsed.reference_phone_2 ?? "-"}  />
                                         </div>
                                     </div> 
 
@@ -777,7 +767,7 @@ console.log(parsed);
                                                     </>
                                                 }                                                
                                             />
-                                             <ValueView value={parsed.reference_company_2}  />
+                                             <ValueView value={parsed.reference_company_2 ?? "-"}  />
                                         </div>
                                     </div> 
 
@@ -791,7 +781,7 @@ console.log(parsed);
                                                     </>
                                                 }                                                
                                             />
-                                             <ValueView value={parsed.reference_position_2}  />
+                                             <ValueView value={parsed.reference_position_2 ?? "-"}  />
                                         </div>
                                     </div> 
                                 </div>

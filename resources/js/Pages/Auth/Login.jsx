@@ -30,7 +30,7 @@ export default function Login({ status, canResetPassword }) {
                     {status}
                 </div>
             )}
-<div className=''>
+        <div className=''>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
@@ -95,8 +95,7 @@ export default function Login({ status, canResetPassword }) {
                     </PrimaryButton>
                 </div>
             </form>    
-</div>
-
+        </div>
         </LoginLayout>
     );
 }

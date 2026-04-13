@@ -3,6 +3,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Register() {
@@ -22,10 +23,11 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <AuthenticatedLayout>
             <Head title="Register" />
 
             <form onSubmit={submit}>
+                <div className="border border-gray-300 p-4 rounded-xl bg-white mb-8 m-8 mt-4 md:mt-8">
                 <div>
                     <InputLabel htmlFor="name" value="Nama" />
 
@@ -131,7 +133,8 @@ export default function Register() {
                         Daftar
                     </PrimaryButton>
                 </div>
+                </div>
             </form>
-        </GuestLayout>
+        </AuthenticatedLayout>
     );
 }

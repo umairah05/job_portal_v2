@@ -22,4 +22,14 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
+    public function deleteUser(Request $requestd): RedirectResponse
+    {
+        // dd($request->all());
+        User::findOrFail($requestd->id)->delete();
+        
+        return Redirect::route('user')->with('success', 'User deleted successfully.');
+
+         
+    }
 }

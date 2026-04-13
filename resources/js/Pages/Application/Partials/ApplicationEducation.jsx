@@ -133,37 +133,23 @@ export default function ApplicationEducation({onAddEducation}) {
                                     // htmlFor="vacancies_location"
                                     value={
                                         <>
-                                            Tarikh Mula<span className="text-red-500">*</span>
+                                            Tahun Mula<span className="text-red-500">*</span>
                                         </>
                                     }
                                 />
-                                <Popover open={startSchool} onOpenChange={setStartSchool} modal={false}>
-                                        <PopoverTrigger asChild>
-                                                    <button
-                                                        type="button"
-                                                        className={cn(
-                                                            "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
-                                                            !data.start_school && "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        { data.start_school ? format(data.start_school, "dd/MM/yyyy") : "Pilih Tarikh"}
-                                                    </button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" trapFocus={false}>
-                                                    <Calendar
-                                                    mode="single"
-                                                    selected={data.start_school ? new Date(data.start_school) : undefined}
-                                                    onSelect={selectedDate => {
-                                                            setData('start_school', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
-                                                            setStartSchool(false);
-                                                        }}
-                                                    captionLayout={dropdown}
-                                                    fromYear={1900}
-                                                    toYear={2100}
-                                                    className="rounded-lg border shadow-sm"
-                                                />
-                                                </PopoverContent>
-                                        </Popover>
+                            
+                                <TextInput
+                                    id="start_school"
+                                    name="start_school"
+                                    type="number"
+                                    value={data.start_school}
+                                    className="mt-1 block w-full"
+                                    isFocused={true}
+                                    onChange={(e) =>
+                                        setData('start_school', e.target.value)
+                                    }
+                                    required
+                                />
                                 <InputError
                                     message={errors.start_school}
                                     className="mt-2"
@@ -177,37 +163,22 @@ export default function ApplicationEducation({onAddEducation}) {
                                     // htmlFor="vacancies_location"
                                     value={
                                         <>
-                                            Tarikh Akhir<span className="text-red-500">*</span>
+                                            Tahun Akhir<span className="text-red-500">*</span>
                                         </>
                                     }
+                                 />
+                                <TextInput
+                                    id="end_school"
+                                    name="end_school"
+                                    type="number"
+                                    value={data.end_school}
+                                    className="mt-1 block w-full"
+                                    isFocused={true}
+                                    onChange={(e) =>
+                                        setData('end_school', e.target.value)
+                                    }
+                                    required
                                 />
-                                <Popover open={endSchool} onOpenChange={setEndSchool} modal={false}>
-                                        <PopoverTrigger asChild>
-                                                    <button
-                                                        type="button"
-                                                        className={cn(
-                                                            "mt-1 h-9 w-full text-left text-sm bg-white border border-gray-300 rounded-md px-3 py-2",
-                                                            !data.end_school && "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        { data.end_school ? format(data.end_school, "dd/MM/yyyy") : "Pilih Tarikh"}
-                                                    </button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" trapFocus={false}>
-                                                    <Calendar
-                                                    mode="single"
-                                                    selected={data.end_school ? new Date(data.end_school) : undefined}
-                                                    onSelect={selectedDate => {
-                                                            setData('end_school', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '');
-                                                            setEndSchool(false);
-                                                        }}
-                                                    captionLayout={dropdown}
-                                                    fromYear={1900}
-                                                    toYear={2100}
-                                                    className="rounded-lg border shadow-sm"
-                                                />
-                                                </PopoverContent>
-                                        </Popover>
                                 <InputError
                                     message={errors.end_school}
                                     className="mt-2"
@@ -229,14 +200,14 @@ export default function ApplicationEducation({onAddEducation}) {
                                 value={data.education_level}
                                  onChange={handleEducationChange}
                                 options={[
-                                { value: 'spm', label: 'SPM' },
-                                { value: 'stpm', label: 'STPM' },
-                                { value: 'asasi', label: 'Asasi'},
-                                { value: 'matrik', label: 'Matrikulasi' },
-                                { value: 'diploma', label: 'Diploma' },
-                                { value: 'degree', label: 'Ijazah Sarjana Muda' },
-                                { value: 'master', label: 'Ijazah Sarjana' },
-                                { value: 'phd', label: 'Doktor Falsafah' },
+                                { value: 'SPM', label: 'SPM' },
+                                { value: 'STPM', label: 'STPM' },
+                                { value: 'Asasi', label: 'Asasi'},
+                                { value: 'Matrikulasi', label: 'Matrikulasi' },
+                                { value: 'Diploma', label: 'Diploma' },
+                                { value: 'Degree', label: 'Ijazah Sarjana Muda' },
+                                { value: 'Master', label: 'Ijazah Sarjana' },
+                                { value: 'PhD', label: 'Doktor Falsafah' },
                             ]}
                             columns={8}
                             />

@@ -35,7 +35,13 @@ class DashboardController extends Controller
         return Inertia::render('ApplicationReceived/ApplicationReceivedIndex', [
             'applications' => $applications,
             'vacancies' => $vacancies,
+            'backRoute'=>"dashboard",
         ]);
+    }
+
+    public function aboutUs()
+    {
+        return Inertia::render('AboutUs');
     }
 
 }

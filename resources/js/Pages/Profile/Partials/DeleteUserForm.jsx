@@ -49,7 +49,7 @@ export default function DeleteUserForm({ className = '' }) {
         <section className={`space-y-6 ${className}`}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">
-                    Delete Account
+                    Padam Akaun
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
@@ -61,13 +61,13 @@ export default function DeleteUserForm({ className = '' }) {
             </header>
 
             <DangerButton onClick={confirmUserDeletion}>
-                Delete Account
+                Padam Akaun
             </DangerButton>
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete your account?
+                        Anda yakin mahu memadam akaun anda?
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">

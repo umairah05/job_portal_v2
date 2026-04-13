@@ -56,7 +56,7 @@ export default function Dashboard({vacancies, applications}) {
                         <div className="p-2 grid flex-1 gap-2 md:grid-cols-3 my-2">
                             
                             {vacancies.map((vacancy) => (
-                                <Link href={route('viewApplicantList', { id: vacancy.id })}>
+                                <Link href={route('viewApplicantList', { id: vacancy.id})}>
                                 <div className="p-6 text-gray-900 border border-gray-300 rounded-lg bg-orange-200 shadow">
                                     <div className='uppercase font-bold'>
                                         {vacancy.vacancies_title}                                                

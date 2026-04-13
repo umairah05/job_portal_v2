@@ -174,12 +174,18 @@ console.log(parsed);
         <AuthenticatedLayout
             header={
                 <div className="flex items-center gap-2">
-                    <Link
+                    <button 
+                        onClick={() => window.history.back()}
+                        className="hover:bg-gray-100 rounded px-1 transition-colors"
+                    >
+                        <ChevronLeft className="w-7 h-7" />
+                    </button>
+                    {/* <Link
                         href={route('applicationReceived')}
                         className="hover:bg-gray-100 rounded px-1 transition-colors"
                     >
                         <ChevronLeft className="w-7 h-7" />
-                    </Link>
+                    </Link> */}
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Maklumat Pemohon
                 </h2>

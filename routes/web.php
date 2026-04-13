@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
     //download
     Route::get('/application-received/download/{id}', [ApplicationController::class, 'downloadApplicationAttacthment'])->name('application.downloadAttachment');
     
+    //about us
+    Route::get('/about-us', [DashboardController::class, 'aboutUs'])->name('about.us');
     //pdf
     Route::get('/testpdf', [ApplicationController::class, 'testpdf'])->name('testpdf');
     Route::get('/application-received/print/{id}', [ApplicationController::class, 'applicationPdf'])->name('applicationPdf');
